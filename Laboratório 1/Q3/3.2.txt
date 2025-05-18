@@ -1,0 +1,170 @@
+.data
+a: .float 0
+b: .float 2 
+c: .float 3
+
+mensagem_de_erro: .asciz "Erro! Não é uma equação de segundo grau.\n"
+sinal_de_menos: .asciz " - "
+sinal_de_mais: .asciz " + "
+num_complexo: .asciz " i"
+nova_linha: .ascii "\n"
+float_zero: .float 0
+raiz_1: .asciz "R(1) = "
+raiz_2: .asciz "R(2) = "
+quatro: .float 4
+
+.text
+MAIN:
+	# Coef. a
+	la t0, a # Carrego o endereço base de a p/ t0
+	flw fa1, 0(t0) # a0 = a
+	# Coef. b
+	la t0, b
+	flw fa2, 0(t0) # a1 = b
+	# Coef. c
+	la t0, c
+	flw fa3, 0(t0) # a2 = c
+	# fa0 = zero
+	la t0, float_zero
+	flw fa0, 0(t0)
+	feq.s t0, fa0, fa1 # Se forem iguais t0 = 1, se não t0 = 0
+	bne t0, zero, SHOW_ERRO
+	
+	
+	# Primeiro, vamos calcular o delta
+DELTA:
+	fmul.s ft0, fa2, fa2 # fto = b^2
+	la t0, quatro 
+	flw ft1, 0(t0)
+	fmul.s ft1, ft1, fa1 
+	fmul.s ft1, ft1, fa3 # ft1 = 4*a*C
+	fsub.s ft0, ft0, ft1 # ft0 = b^2 - 4*a*C
+
+VERIFICA_RAIZ:
+	# Veifixo se o DELTA é menor que zero
+	flt.s t0, ft0, fa0 # Se ft0 < fa0 então t0 = 1, se não t0 = 0
+	beq t0, zero, RAIZ_REAL
+	
+RAIZ_COMPLEXA:
+	# Inverto o valor do DELTA
+	fneg.s ft0, ft0
+	# Calculamos a raiz quadrada de DELTA
+	fsqrt.s ft0, ft0 # ft0 = raiz de DELTA
+	fneg.s ft1, fa2 # ft1 = -b
+	fadd.s ft2, fa1, fa1 # ft2 = 2a
+	# Parte real
+	fdiv.s ft3, ft1, ft2 # ft3 = -b/2a
+	# Parte imaginária
+	fdiv.s ft4, ft0, ft2 # ft4 = DELTA/2a
+	# Guardo na pilha
+	addi sp, sp, -8
+	fsw ft3, 0(sp)
+	fsw ft4, 4(sp)
+	
+RAIZ_COMPLEXA_SHOW:
+	# Imprimir no terminal R(1) = ...
+	la a0, raiz_1
+	li a7, 4
+	ecall
+	# Recupero a parte real e imprimo
+	flw fa0, 0(sp)
+	li a7, 2
+	ecall
+	# Imprimo o sinal de mais
+	la a0, sinal_de_mais
+	li a7, 4
+	ecall
+	# Recupero a parte imaginaria e imprimo
+	flw fa0, 4(sp)
+	li a7, 2
+	ecall
+	# Imprimo o i
+	la a0, num_complexo
+	li a7, 4
+	ecall
+	# Imprimo uma nova linha
+	la a0, nova_linha
+	li a7, 4
+	ecall
+	# Imprimir no terminal R(2) = ...
+	add a0, zero,zero # Limpo o que está em a0
+	la a0, raiz_2
+	li a7,4
+	ecall
+	# Recupero a parte real e imprimo
+	flw fa0, 0(sp)
+	li a7, 2
+	ecall
+	# Imprimo o sinal de menos
+	la a0, sinal_de_menos
+	li a7, 4
+	ecall
+	# Recupero a parte imaginaria e imprimo
+	flw fa0, 4(sp)
+	li a7, 2
+	ecall
+	# Imprimo o i
+	la a0, num_complexo
+	li a7, 4
+	ecall
+	# Restauro a pilha
+	addi sp, sp, 8
+	j FIM
+						
+RAIZ_REAL:
+	# Calculamos a raiz quadrada de DELTA
+	fsqrt.s ft0, ft0 # ft0 = raiz de DELTA
+	fneg.s ft1, fa2 # ft1 = -b
+	fadd.s ft2, fa1, fa1 # ft2 = 2a
+	# 1) Fazemos a soma
+	fadd.s ft3, ft1, ft0
+	# Dividimos
+	fdiv.s ft3, ft3, ft2
+	# 2) Fazemos a subtração
+	fsub.s ft4, ft1, ft0
+	# Dividimos
+	fdiv.s ft4, ft4, ft2
+	# Libero espaço p/ guardar na pilha
+	addi sp, sp, -8
+	fsw ft4, 0(sp)
+	fsw ft3, 4(sp)
+
+RAIZ_REAL_SHOW:
+	# Imprimir no terminal R(1) = ...
+	la a0, raiz_1
+	li a7, 4
+	ecall
+	# Recupero a raiz da pilha e imprimo
+	flw fa0, 0(sp)
+	li a7, 2
+	ecall
+	# Imprimo uma nova linha
+	la a0, nova_linha
+	li a7, 4
+	ecall
+	# Imprimir no terminal R(2) = ...
+	add a0, zero,zero # Limpo o que está em a0
+	la a0, raiz_2
+	li a7,4
+	ecall
+	# Recupero a raiz da pilha
+	flw fa0, 4(sp)
+	li a7, 2
+	ecall
+	# Restauro a pilha
+	addi sp, sp, 8
+	j FIM
+SHOW_ERRO:
+	la a0, mensagem_de_erro
+	li a7, 4
+	ecall
+	j FIM
+	
+FIM:	
+	# Encerro o programa
+	li a7,10
+	ecall
+	
+	
+
+	
