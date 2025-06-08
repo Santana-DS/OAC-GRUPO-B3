@@ -43,13 +43,13 @@ branch_ok:
     addi t0, zero, 1             # t0 = 1 (confirma branch)
 
     # ===== TESTE JAL =====
-    jal ra, jal_test             # Salta e guarda endereço (teste JAL)
+    jal t1, jal_test             # Salta e guarda endereço (teste JAL)
     addi t0, zero, 0x66         # Não deve executar
 jal_test:
     addi t0, zero, 2             # t0 = 2 (confirma JAL)
 
     # ===== TESTE JALR =====
-    la t1, jair_target           
+    addi t1, t1, 0x14           
     jalr ra, t1, 0               # Salta para jair_target (teste JALR)
     addi t0, zero, 0x66         # Não deve executar
 jair_target:

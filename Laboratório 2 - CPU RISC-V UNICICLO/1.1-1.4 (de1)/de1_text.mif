@@ -24,14 +24,13 @@ BEGIN
 00000011 : 00628463;   % 40:     beq t0, t1, branch_ok        # Se t0 == t1, salta (teste BEQ) %
 00000012 : 06600293;   % 41:     addi t0, zero, 0x66         # Não deve executar %
 00000013 : 00100293;   % 43:     addi t0, zero, 1             # t0 = 1 (confirma branch) %
-00000014 : 008000ef;   % 46:     jal ra, jal_test             # Salta e guarda endereço (teste JAL) %
+00000014 : 0080036f;   % 46:     jal t1, jal_test             # Salta e guarda endereço (teste JAL) %
 00000015 : 06600293;   % 47:     addi t0, zero, 0x66         # Não deve executar %
 00000016 : 00200293;   % 49:     addi t0, zero, 2             # t0 = 2 (confirma JAL) %
-00000017 : 00000317;   % 52:     la t1, jair_target            %
-00000018 : 01030313;   % 52:  %
-00000019 : 000300e7;   % 53:     jalr ra, t1, 0               # Salta para jair_target (teste JALR) %
-0000001a : 06600293;   % 54:     addi t0, zero, 0x66         # Não deve executar %
-0000001b : 00300293;   % 56:     addi t0, zero, 3             # t0 = 3 (confirma JALR) %
-0000001c : 0ff00293;   % 59:     addi t0, zero, 0xFF          # t0 = 0xFF (marcador de sucesso) %
-0000001d : 00100073;   % 60:     ebreak                       # Termina execução %
+00000017 : 01430313;   % 52:     addi t1, t1, 0x14            %
+00000018 : 000300e7;   % 53:     jalr ra, t1, 0               # Salta para jair_target (teste JALR) %
+00000019 : 06600293;   % 54:     addi t0, zero, 0x66         # Não deve executar %
+0000001a : 00300293;   % 56:     addi t0, zero, 3             # t0 = 3 (confirma JALR) %
+0000001b : 0ff00293;   % 59:     addi t0, zero, 0xFF          # t0 = 0xFF (marcador de sucesso) %
+0000001c : 00100073;   % 60:     ebreak                       # Termina execução %
 END;
