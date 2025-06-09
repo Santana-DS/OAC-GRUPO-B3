@@ -21,38 +21,38 @@ begin
 	begin
 	case ALUop is
 		when "00" => 																	-- lw e sw (fazem add)
-			controleULA <= "00010";
+			controleULA <= OPADD;
 				
 		when "01" => 																	-- beq
-			controleULA <= "00110";
+			controleULA <= OPSUB;
 				
 		when "10" => 																	-- instruções do tipo-R (add, sub, and, or, slt)
 			case funct3 is
 				when "000" => 
 					if funct7 = '0' then 
-						controleULA <= "00010"; 										-- add
+						controleULA <= OPADD; 										-- add
 					else 
-						controleULA <= "00110"; 										-- sub
+						controleULA <= OPSUB; 										-- sub
 					end if;
  						
 				when "111" => 															-- and
-					controleULA <= "00000";
+					controleULA <= OPAND;
 					
 				when "110" => 
-					controleULA <= "00001"; 											-- or
+					controleULA <= OPOR; 											-- or
 						
 				when "010" =>
-					controleULA <= "00111"; 											-- slt
+					controleULA <= OPSLT; 											-- slt
 					
 				when others =>
-					null; 								
+					controleULA <= OPNULL; 								
 				end case;
 						
 			when "11" =>					
-				controleULA <= "00010";												-- addi e jalr (os dois fazem add). Note que o jal não passa pela ULA
+				controleULA <= OPADD;												-- addi e jalr (os dois fazem add). Note que o jal não passa pela ULA
 				
 			when others =>
-				null;
+				controleULA <= OPNULL;
 							
 	end case;
 	end process;

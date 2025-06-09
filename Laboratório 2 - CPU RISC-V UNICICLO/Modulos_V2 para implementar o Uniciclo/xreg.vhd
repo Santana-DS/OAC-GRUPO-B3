@@ -24,7 +24,7 @@ entity xregs is
 		oREGB 	: out std_logic_vector(SIZE-1 downto 0);
 		
 		iDISP		: in  std_logic_vector(ADDR-1 downto 0) := (others => '0');
-		oREGD		: out std_logic_vector(SIZE-1 downto 0)
+		oREGD		: out std_logic_vector(SIZE-1 downto 0) := (others => '0')
 	);
 end entity;
 
@@ -32,7 +32,7 @@ architecture rtl of xregs is
 
 type banco is array (31 downto 0) of std_logic_vector(31 downto 0);
 constant ZERO32 : std_logic_vector(31 downto 0) := X"00000000";
-constant GPR : natural := 5;
+constant GPR : natural := 3;
 constant SPR : natural := 2;
 
 signal xreg32: banco;
@@ -40,6 +40,7 @@ signal xreg32: banco;
 begin
 	oREGA <= ZERO32 when (iRS1="00000") else xreg32(to_integer(unsigned(iRS1)));
 	oREGB <= ZERO32 when (iRS2="00000") else xreg32(to_integer(unsigned(iRS2)));
+	oREGD <= ZERO32 when (iRS2="00000") else xreg32(to_integer(unsigned(iDISP)));
 	process (iCLK)
 	begin
 		if (rising_edge(iCLK)) then

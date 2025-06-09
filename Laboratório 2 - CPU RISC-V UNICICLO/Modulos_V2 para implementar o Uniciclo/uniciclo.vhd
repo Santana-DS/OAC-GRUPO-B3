@@ -20,13 +20,14 @@ architecture Behavioral of Uniciclo is
     -- Sinais internos
     signal PC_internal      	 : std_logic_vector(31 downto 0) := x"00400000";
     signal Instr_internal   	 : std_logic_vector(31 downto 0) := (others => '0');
+	 signal regin_internal		 : std_logic_vector(4 downto 0);
     signal regout_internal  	 : std_logic_vector(31 downto 0) := (others => '0');
     signal SaidaULA          	 : std_logic_vector(31 downto 0);
     -- signal Leitura2         : std_logic_vector(31 downto 0);
     signal MemData             : std_logic_vector(31 downto 0);
     signal EscreveMem        	 : std_logic;
     signal mem2reg_internal    : std_logic;
-	 signal memRead_internal  	 : std_logic;
+	 signal memRead_internal  	 : std_logic := '0';
 	 signal branch_internal   	 : std_logic;
 	 signal ALUOp_internal 	  	 : std_logic_vector(1 downto 0);
 	 signal ALUSrc_internal  	 : std_logic;
@@ -48,8 +49,9 @@ begin
     PC     <= PC_internal;
     Instr  <= Instr_internal;
     regout <= regout_internal;
+	
+	 
 	 PCMux_selector <= (branch_internal and ULAZero_internal) or jal_internal;
-    
     -- Processo para atualização do PC
     process(clockCPU, reset)
     begin
@@ -59,7 +61,7 @@ begin
 				if (jalr_internal = '1') then
 					PC_internal <= SaidaULA;
 				elsif (PCMux_selector = '1') then 
-					PC_internal <= std_logic_vector(signed(PC_internal) + signed(imm32_internal));
+					PC_internal <= std_logic_vector(unsigned(PC_internal) + unsigned(imm32_internal));
 				else
 					PC_internal <= std_logic_vector(unsigned(PC_internal) + 4);
 				end if;
@@ -95,6 +97,7 @@ begin
 	
 	 
 	  -- Unidade de controle
+	  memRead_internal <= '0';
 	 cntrl : entity work.unidadeDeControle(arc)
 		port map (
 			opcode     => Instr_internal(6 downto 0),			
@@ -111,6 +114,7 @@ begin
 		);
 	 
 	 -- conexão com o banco de registradores
+	 regin_internal <= regin;
 	 memData_internal <= std_logic_vector(unsigned(PC_internal) + 4) when (selectDado_internal = '1') else
 								MemData when (mem2reg_internal = '1' and selectDado_internal = '0') else 
 								SaidaULA;
@@ -124,7 +128,9 @@ begin
 			iRD		=> Instr_internal(11 downto 7),
 			iDATA		=> memData_internal,
 			oREGA 	=> oRegA_internal,
-			oREGB 	=> oRegB_internal
+			oREGB 	=> oRegB_internal,
+			iDISP		=> regin_internal,
+			oREGD		=> regout_internal
 		);
 		
 	GerImm : entity work.genImm32(rtl)

@@ -33,6 +33,7 @@ architecture Behavioral of TopDE is
     end component;
     
 begin
+	Estado <= (others => '0');
     -- Clock divider process
     process(CLOCK)
     begin

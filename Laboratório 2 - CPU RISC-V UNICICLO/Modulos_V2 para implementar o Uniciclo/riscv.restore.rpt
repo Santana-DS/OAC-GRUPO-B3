@@ -1,5 +1,5 @@
 Restore Archived Project report for riscv
-Sun Jun  8 00:55:56 2025
+Sun Jun  8 22:22:42 2025
 Quartus Prime Version 24.1std.0 Build 1077 03/04/2025 SC Lite Edition
 
 
@@ -37,7 +37,7 @@ on the Quartus Prime software download page.
 +-------------------------------------------------------------------------+
 ; Restore Archived Project Summary                                        ;
 +---------------------------------+---------------------------------------+
-; Restore Archived Project Status ; Successful - Sun Jun  8 00:55:56 2025 ;
+; Restore Archived Project Status ; Successful - Sun Jun  8 22:22:42 2025 ;
 ; Revision Name                   ; riscv                                 ;
 ; Top-level Entity Name           ; TopDE                                 ;
 ; Family                          ; Cyclone IV E                          ;
@@ -47,13 +47,13 @@ on the Quartus Prime software download page.
 +-----------------------------------+
 ; Restore Archived Project Messages ;
 +-----------------------------------+
-Info: Successfully restored 'C:/Users/Santana/Desktop/riscv.qar' into the 'C:/Users/Santana/Desktop/riscv_restored/' directory
+Info: Successfully restored 'C:/Users/Santana/Desktop/GrupoB3_Uniciclo2.qar' into the 'C:/Users/Santana/Desktop/GrupoB3_Uniciclo2_restored/' directory
 Info: Generated report 'riscv.restore.rpt'
 Info (23030): Evaluation of Tcl script d:/intelfpga_lite/24.1std/quartus/common/tcl/apps/qpm/qar.tcl was successful
 Info: Quartus Prime Shell was successful. 0 errors, 0 warnings
-    Info: Peak virtual memory: 4843 megabytes
-    Info: Processing ended: Sun Jun  8 00:55:56 2025
-    Info: Elapsed time: 00:00:00
+    Info: Peak virtual memory: 4834 megabytes
+    Info: Processing ended: Sun Jun  8 22:22:42 2025
+    Info: Elapsed time: 00:00:01
     Info: Total CPU time (on all processors): 00:00:00
 
 
@@ -68,6 +68,8 @@ Info: Quartus Prime Shell was successful. 0 errors, 0 warnings
 ; alu_control.vhd         ;
 ; assignment_defaults.qdf ;
 ; controle.vhd            ;
+; de1_data.mif            ;
+; de1_text.mif            ;
 ; genImm32.vhd            ;
 ; ramD.cmp                ;
 ; ramD.qip                ;
@@ -75,8 +77,10 @@ Info: Quartus Prime Shell was successful. 0 errors, 0 warnings
 ; ramI.cmp                ;
 ; ramI.qip                ;
 ; ramI.vhd                ;
+; riscv.out.sdc           ;
 ; riscv.qpf               ;
 ; riscv.qsf               ;
+; riscv.sdc               ;
 ; riscv_pkg.vhd           ;
 ; uniciclo.vhd            ;
 ; wave.vwf                ;
